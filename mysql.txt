@@ -1,0 +1,304 @@
+/* An imaginary employee database is created having five tables, each table contains various information about each employee. 
+   The first example shows the creation of a table employees4_tbl. The creation of other tables are not shown*/
+
+-- command to create a table with four columns.
+
+CREATE TABLE employees4_tbl (
+    id int,
+    name varchar(255),
+    movie varchar(255),
+    FOREIGN KEY (id) REFERENCES employees3_tbl(id)
+);
+
+INSERT INTO employees4_tbl
+VALUES(100, "Michael", "Godfather" ),
+(200, "Cassandra", "My Best friend's Wedding" ),
+(600,"Peter","Pulp Fiction"),
+(700,"Romeo","Die Hard" ),
+(800,"Jennie","Avatar" ),
+(900,"Jack", "No Country for Old Men"),
+(2200,"Jordan","Godfather"),
+(500,"Beth","No Country for Old men"),
+(300,"Samuel","Pulp Fiction" ),
+(400,"John", "Godfather" );
+
+
+
+
+-- Created table  after executing the above comments is 
+
+id,name,movie
+100,Michael,Godfather
+200,Cassandra,"My Best friend's Wedding"
+600,Peter,"Pulp Fiction"
+700,Romeo,"Die Hard"
+800,Jennie,Avatar
+900,Jack,"No Country for Old Men"
+2200,Jordan,Godfather
+500,Beth,"No Country for Old men"
+300,Samuel,"Pulp Fiction"
+400,John,Godfather
+
+
+
+
+
+-- employmeees_tbl
+
+id,name,dept,salary
+100,Michael,Sales,5500
+200,Cassandra,Technology,6000
+300,Samuel,Technology,7000
+400,John,Sales,9500
+500,Beth,Technology,6500
+600,Peter,HR,10000
+700,Romeo,Legal,7500
+800,Jennie,Marketing,7000
+900,Jack,Technology,7000
+
+-- employees3_tbl
+
+id,name,Homestate,School,Music
+100,Michael,NY,NYU,Rock
+200,Cassandra,CO,"U of CO",POP
+300,Samuel,NV,UCLA,Country
+400,John,RI,UPenn,Rock
+500,Beth,IL,"U of IL",Jazz
+600,Peter,TX,"UT,Austin",Blue
+700,Romeo,VA,"U of VA",Country
+800,Jennie,FL,"U of FL",POP
+900,Jack,MO,"U of MO",classical
+910,Armstrong,KY,UCLA,Country
+2200,Jordan,NY,UPenn,Country
+
+
+-- employees2_tbl
+
+id,name,favcolor,hobby,point
+100,Michael,red,travel,9.9
+200,Cassandra,pink,reading,8
+300,Samuel,blue,cycling,8.2
+400,John,green,travel,9.3
+500,Beth,green,movies,8.4
+600,Peter,blue,reading,9.8
+700,Romeo,brown,music,10
+800,Jennie,cyan,dancing,7.8
+900,Jack,green,movies,9.6
+2200,Jordan,Magenta,reading,9.7
+
+-- employees5_tbk
+
+id,name,haircolor
+100,Michael,Brown
+200,Cassandra,Brown
+600,Peter,Black
+700,Romeo,Black
+
+
+
+
+/* to find favorite genre of music of employees whose favoorite movie is "Godfather"
+   we use employees3_tbl and employees4_tbl */
+
+SELECT employees4_tbl.name, employees4_tbl.movie, employees3_tbl.school, employees3_tbl.Homestate, employees3_tbl.music FROM employees4_tbl
+LEFT JOIN
+employees3_tbl ON employees3_tbl.name= employees4_tbl.name
+WHERE movie="Godfather";
+
+-- the output is
+
+name,movie,school,Homestate,music
+Michael,Godfather,NYU,NY,Rock
+Jordan,Godfather,UPenn,NY,Country
+John,Godfather,UPenn,RI,Rock
+
+
+-- from employees2_tbl finding the employess who point is between 8 and 9
+
+SELECT * FROM employees2_tbl
+WHERE point BETWEEN 8 AND 9;
+
+
+-- output is
+
+id,name,favcolor,hobby,point
+200,Cassandra,pink,reading,8
+300,Samuel,blue,cycling,8.2
+500,Beth,green,movies,8.4
+
+--updating a particular cell in a table
+
+UPDATE employees2_tbl
+SET favcolor="green"
+WHERE id=400;  
+
+-- find the names from eployeees2_tbl who hobby is reading and has a point more than 8.5
+
+SELECT id, name, hobby, point FROM employees2_tbl
+WHERE hobby="reading"
+AND point>8.5;
+
+-- the output is
+id,name,hobby,point
+600,Peter,reading,9.8
+2200,Jordan,reading,9.7
+
+/* using employyes2_tbl among the emplooyes who have point more than 8.5, goup them by hobby, find how many have one kind of hobby  
+   and arrange them in descending order */
+
+
+SELECT COUNT(id), hobby, point
+FROM employees2_tbl
+GROUP BY hobby
+HAVING point>8.0
+ORDER BY COUNT(id) DESC;
+
+-- output is 
+
+COUNT(id),hobby,point
+2,travel,9.9
+2,movies,8.4
+1,cycling,8.2
+1,music,10
+
+-- to get the avg salary of each depaprtment and then having them arranged in descending order, salary information is in employees_tbl.
+
+SELECT  dept, avg(salary) FROM employees_tbl
+group by dept
+order by avg(salary) desc;
+
+-- the output is
+
+dept,avg(salary)
+HR,10000.0000
+Sales,7500.0000
+Legal,7500.0000
+Marketing,7000.0000
+Technology,6625.0000
+
+-- using employees2_tbl, employees3_tbl and employees4_tbl to find the employees choice of hobby, musical genre and fav movie
+
+SELECT employees2_tbl.name, employees2_tbl.hobby, employees3_tbl.Music, employees4_tbl.movie
+FROM employees2_tbl
+LEFT JOIN employees3_tbl oN employees2_tbl.name=employees3_tbl.name
+LEFT Join employees4_tbl ON employees2_tbl.name= employees4_tbl.name;
+
+-- the output is 
+
+name,hobby,Music,movie
+Michael,travel,Rock,Godfather
+Cassandra,reading,POP,"My Best friend's Wedding"
+Samuel,cycling,Country,"Pulp Fiction"
+John,travel,Rock,Godfather
+Beth,movies,Jazz,"No Country for Old men"
+Peter,reading,Blue,"Pulp Fiction"
+Romeo,music,Country,"Die Hard"
+Jennie,dancing,POP,Avatar
+Jack,movies,classical,"No Country for Old Men"
+Jordan,reading,Country,Godfather
+
+--  using employees2_tbl, employees3_tbl and employees4_tbl to find the employees choice of musical genre and fav movie whose hobby is reading.
+
+
+
+SELECT employees2_tbl.name, employees2_tbl.hobby, employees3_tbl.Music, employees4_tbl.movie
+FROM employees2_tbl
+INNER JOIN employees3_tbl oN employees2_tbl.name=employees3_tbl.name
+INNER Join employees4_tbl ON employees2_tbl.name= employees4_tbl.name
+WHERE hobby="reading";
+
+-- the output is
+
+name,hobby,Music,movie
+Cassandra,reading,POP,"My Best friend's Wedding"
+Peter,reading,Blue,"Pulp Fiction"
+Jordan,reading,Country,Godfather
+
+-- to find the hobbies and taste in music genre of employess whose hair colors are unknow  we use employees2_tbl, employees3_tbp and employees5_tbl  
+
+SELECT employees2_tbl.name, employees2_tbl.hobby, employees3_tbl.Music, employees5_tbl.haircolor
+FROM employees2_tbl
+INNER JOIN employees3_tbl oN employees2_tbl.name=employees3_tbl.name
+INNER Join employees5_tbl ON employees2_tbl.name= employees5_tbl.name;
+
+-- the result is 
+
+name,hobby,Music,haircolor
+Michael,travel,Rock,Brown
+Cassandra,reading,POP,Brown
+Peter,reading,Blue,Black
+Romeo,music,Country,Black
+
+-- notice using INNER JOIn we only get the rows that are present in employees5_tbl (it has information of only four employees)
+
+-- if lEFT join is used then all the cell values of haircolor of employess whose haircolor values are not knows are returned null
+
+SELECT employees2_tbl.name, employees2_tbl.hobby, employees3_tbl.Music, employees5_tbl.haircolor
+FROM employees2_tbl
+LEFT JOIN employees3_tbl oN employees2_tbl.name=employees3_tbl.name
+LEFT Join employees5_tbl ON employees2_tbl.name= employees5_tbl.name;
+
+-- the output is
+
+name,hobby,Music,haircolor
+Michael,travel,Rock,Brown
+Cassandra,reading,POP,Brown
+Samuel,cycling,Country,NULL
+John,travel,Rock,NULL
+Beth,movies,Jazz,NULL
+Peter,reading,Blue,Black
+Romeo,music,Country,Black
+Jennie,dancing,POP,NULL
+Jack,movies,classical,NULL
+Jordan,reading,Country,NULL
+
+-- find the avg salary of each deartment employess and display them in descending order also state how many employees are there in each department
+
+SELECT count(id),  dept, avg(salary) FROM employees_tbl
+GROUP BY dept
+ORDER BY avg(salary) DESC;
+
+-- the output is
+
+count(id),dept,avg(salary)
+1,HR,10000.0000
+2,Sales,7500.0000
+1,Legal,7500.0000
+1,Marketing,7000.0000
+4,Technology,6625.0000
+
+-- to find the maximum salary of any department and then to display them in descending order, also display the number of employees in any department.
+
+SELECT count(id),  dept, max(salary) FROM employees_tbl
+GROUP BY dept
+ORDER BY max(salary) DESC;
+
+-- output is
+
+count(id),dept,max(salary)
+1,HR,10000
+2,Sales,9500
+1,Legal,7500
+4,Technology,7000
+1,Marketing,7000
+
+-- To find the musci genre choice of employess whose favorite hobby is music we do the following
+
+SELECT employees2_tbl.name,  employees2_tbl.hobby, employees3_tbl.Music
+FROM employees2_tbl
+LEFT JOIN employees3_tbl ON employees2_tbl.id=employees3_tbl.id
+WHERE hobby="music";
+
+-- the output is
+
+name,hobby,Music
+Romeo,music,Country
+
+
+
+
+    
+
+
+
+

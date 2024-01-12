@@ -1,0 +1,11 @@
+Running sql steps: (WINDOWS)
+
+# type services.msc in the search box (open the servies.msc file)
+
+# look for servies mysql, change the status to "running" if it is not "running"
+
+# go to the bin folder of mysql : C:\Program Files\MySQL\MySQL Server 8.0\bin 
+
+# on CMD type mysql -u root -p (it will prompt for password, provide that)
+
+# open mysql workbench, password may need to be given again
